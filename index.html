@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NusantaraPolitik - Portal Berita Politik Nasional Terkini</title>
+    <!-- Memuat Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Memuat Font Inter & Merriweather untuk pengalaman baca yang nyaman -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'],
+                    },
+                    colors: {
+                        brand: {
+                            red: '#DC2626',
+                            darkRed: '#991B1B',
+                            navy: '#0F172A',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 font-sans antialiased transition-colors duration-300">
+
+    <!-- Header / Navbar -->
+    <header class="sticky top-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shadow-sm">
+        <!-- Top Bar Tanggal & Breaking Info -->
+        <div class="bg-slate-900 dark:bg-slate-950 text-slate-300 text-xs py-1.5 px-4 border-b border-slate-800">
+            <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-2">
+                <div class="flex items-center space-x-3">
+                    <span id="current-date" class="font-medium text-slate-200">Rabu, 18 November 2026</span>
+                    <span class="hidden sm:inline text-slate-600">|</span>
+                    <span class="hidden sm:inline-flex items-center text-red-400 font-semibold">
+                        <span class="w-2 h-2 rounded-full bg-red-500 animate-ping mr-2"></span>
+                        EDISI KHUSUS POLITIK & HUKUM
+                    </span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button onclick="toggleBookmarkModal()" class="hover:text-white flex items-center gap-1 transition">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path></svg>
+                        <span>Tersimpan (<span id="bookmark-count">0</span>)</span>
+                    </button>
+                    <button onclick="toggleDarkMode()" class="hover:text-white flex items-center gap-1 transition" aria-label="Ubah Tema">
+                        <svg id="theme-icon-dark" class="w-3.5 h-3.5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                        <svg id="theme-icon-light" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                        <span id="theme-text">Mode Gelap</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Branding & Search -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <!-- Logo -->
+                <div class="flex items-center justify-between">
+                    <a href="#" onclick="resetView()" class="flex items-center gap-2.5 group">
+                        <div class="w-10 h-10 bg-red-600 rounded-xl flex items-center justify-center text-white font-extrabold text-xl shadow-md group-hover:bg-red-700 transition">
+                            NP
+                        </div>
+                        <div>
+                            <h1 class="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-none">
+                                Nusantara<span class="text-red-600">Politik</span>
+                            </h1>
+                            <p class="text-[11px] font-medium tracking-widest uppercase text-slate-500 dark:text-slate-400 mt-0.5">
+                                Jernih • Kritis • Berimbang
+                            </p>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="relative w-full md:w-80 lg:w-96">
+                    <input 
+                        type="text" 
+                        id="search-input" 
+                        placeholder="Cari isu politik, RUU, Pilkada, IKN..." 
+                        class="w-full pl-10 pr-4 py-2.5 bg-slate-100 dark:bg-slate-800 border border-transparent focus:border-red-500 focus:bg-white dark:focus:bg-slate-900 rounded-xl text-sm outline-none transition"
+                        oninput="handleSearch(this.value)"
+                    >
+                    <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigasi Kategori Politik -->
+        <nav class="border-t border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div id="category-tabs" class="flex items-center space-x-2 overflow-x-auto py-2.5 no-scrollbar">
+                    <!-- Tombol kategori akan dirender secara dinamis oleh JS -->
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Konten Utama -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+
+        <!-- TAMPILAN 1: DAFTAR BERITA (BERANDA / KATEGORI) -->
+        <div id="news-list-view">
+            
+            <!-- Headline Utama (Hanya tampil saat 'Semua' dan tidak ada pencarian) -->
+            <section id="featured-section" class="mb-10">
+                <!-- Dirender via JS -->
+            </section>
+
+            <!-- Header Filter Aktif -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6 pb-3 border-b border-slate-200 dark:border-slate-800">
+                <div class="flex items-center gap-2.5">
+                    <span class="w-1.5 h-6 bg-red-600 rounded-full"></span>
+                    <h2 id="section-title" class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">
+                        Semua Berita Politik
+                    </h2>
+                    <span id="article-count-badge" class="px-2.5 py-0.5 text-xs font-semibold bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-full">
+                        0 Artikel
+                    </span>
+                </div>
+                <div class="text-xs text-slate-500 dark:text-slate-400">
+                    Klik berita untuk membaca artikel lengkap di halaman ini
+                </div>
+            </div>
+
+            <!-- Grid Daftar Berita -->
+            <div id="news-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Kartu berita akan dirender di sini -->
+            </div>
+
+            <!-- Empty State jika pencarian tidak ditemukan -->
+            <div id="empty-state" class="hidden text-center py-16 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800">
+                <svg class="w-12 h-12 text-slate-400 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <h3 class="text-lg font-bold text-slate-800 dark:text-slate-200">Berita tidak ditemukan</h3>
+                <p class="text-sm text-slate-500 mt-1">Coba gunakan kata kunci lain atau pilih kategori politik yang tersedia.</p>
+                <button onclick="resetView()" class="mt-4 px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-xl transition">
+                    Tampilkan Semua Berita
+                </button>
+            </div>
+        </div>
+
+        <!-- TAMPILAN 2: MODE BACA ARTIKEL LENGKAP (INLINE READER) -->
+        <article id="article-reader-view" class="hidden max-w-4xl mx-auto">
+            <!-- Progress Bar Membaca di paling atas layar -->
+            <div class="fixed top-0 left-0 w-full h-1.5 bg-slate-200 dark:bg-slate-800 z-50">
+                <div id="reading-progress-bar" class="h-full bg-red-600 transition-all duration-150" style="width: 0%"></div>
+            </div>
+
+            <!-- Navigasi Kembali & Kontrol Pembaca -->
+            <div class="flex flex-wrap items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-200 dark:border-slate-800">
+                <button onclick="closeArticle()" class="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-200 shadow-sm transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                    Kembali ke Daftar Berita
+                </button>
+
+                <!-- Kontrol Ukuran Huruf & Mode Fokus -->
+                <div class="flex items-center gap-2 bg-white dark:bg-slate-900 p-1.5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                    <span class="text-xs font-medium text-slate-500 px-2">Ukuran Teks:</span>
+                    <button onclick="changeFontSize('sm')" id="font-btn-sm" class="px-2.5 py-1 text-xs font-bold rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition">A-</button>
+                    <button onclick="changeFontSize('base')" id="font-btn-base" class="px-2.5 py-1 text-sm font-bold rounded-lg bg-red-600 text-white transition">A</button>
+                    <button onclick="changeFontSize('lg')" id="font-btn-lg" class="px-2.5 py-1 text-base font-bold rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition">A+</button>
+                </div>
+            </div>
+
+            <!-- Kontainer Isi Artikel -->
+            <div id="reader-content" class="bg-white dark:bg-slate-900 rounded-2xl p-6 sm:p-10 shadow-sm border border-slate-200 dark:border-slate-800">
+                <!-- Konten artikel diisi secara dinamis oleh JavaScript -->
+            </div>
+
+            <!-- Berita Terkait di Bawah Artikel -->
+            <div class="mt-10">
+                <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                    <span class="w-1.5 h-5 bg-red-600 rounded-full"></span>
+                    Berita Politik Terkait
+                </h3>
+                <div id="related-articles" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- Artikel terkait dirender di sini -->
+                </div>
+            </div>
+        </article>
+
+    </main>
+
+    <!-- Modal Daftar Berita Tersimpan (Bookmark) -->
+    <div id="bookmark-modal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                <h3 class="font-bold text-lg text-slate-900 dark:text-white">Daftar Bacaan Tersimpan</h3>
+                <button onclick="toggleBookmarkModal()" class="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <div id="bookmark-list" class="p-6 max-h-96 overflow-y-auto space-y-3">
+                <!-- Daftar bookmark -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Notifikasi Toast -->
+    <div id="toast-notification" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-900 dark:bg-slate-800 text-white px-4 py-3 rounded-xl shadow-lg text-sm font-medium flex items-center gap-2.5 border border-slate-700">
+        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+        <span id="toast-message">Pesan notifikasi</span>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                <div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 bg-red-600 rounded-lg flex items-center justify-center text-white font-bold text-base">NP</div>
+                        <span class="text-xl font-extrabold text-slate-900 dark:text-white">Nusantara<span class="text-red-600">Politik</span></span>
+                    </div>
+                    <p class="text-sm text-slate-500 dark:text-slate-400 mt-2 max-w-md">
+                        Portal informasi dan analisis politik nasional Indonesia. Menyajikan liputan mendalam seputar kebijakan pemerintah, parlemen, demokrasi daerah, penegakan hukum, dan pembangunan Ibu Kota Nusantara.
+                    </p>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="selectCategory('Politik Nasional')" class="text-xs px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-red-50 hover:text-red-600 transition">Politik Nasional</button>
+                    <button onclick="selectCategory('DPR')" class="text-xs px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-red-50 hover:text-red-600 transition">DPR</button>
+                    <button onclick="selectCategory('Pilkada')" class="text-xs px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-red-50 hover:text-red-600 transition">Pilkada</button>
+                    <button onclick="selectCategory('Hukum & Korupsi')" class="text-xs px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-red-50 hover:text-red-600 transition">Hukum & Korupsi</button>
+                    <button onclick="selectCategory('IKN')" class="text-xs px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-red-50 hover:text-red-600 transition">IKN</button>
+                </div>
+            </div>
+            <div class="border-t border-slate-100 dark:border-slate-800 mt-8 pt-6 text-center sm:text-left text-xs text-slate-400 flex flex-col sm:flex-row justify-between items-center gap-2">
+                <p>&copy; 2026 NusantaraPolitik Media Network. Hak Cipta Dilindungi Undang-Undang.</p>
+                <p>Pedoman Media Siber • Redaksi • Kode Etik Jurnalistik</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Script Utama Aplikasi -->
+    <script>
+        /**
+         * DATA BERITA NASIONAL (KATEGORI POLITIK)
+         * Setiap artikel memiliki paragraf lengkap agar pengguna dapat langsung membacanya secara utuh.
+         */
+        const newsDatabase = [
+            {
+                id: 1,
+                title: "Konsolidasi Koalisi Nasional Menghadapi Evaluasi Program Strategis Akhir Tahun",
+                category: "Politik Nasional",
+                author: "Dimas Prakoso",
+                role: "Redaktur Politik Utama",
+                publishedAt: "18 Nov 2026 • 16:15 WIB",
+                image: "https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=1000&q=80",
+                featured: true,
+                summary: "Para pimpinan partai koalisi menggelar pertemuan tertutup di Jakarta guna menyelaraskan dukungan politik terhadap target pertumbuhan ekonomi dan stabilitas kabinet.",
+                content: [
+                    "JAKARTA — Sejumlah ketua umum partai politik yang tergabung dalam koalisi pemerintahan menggelar pertemuan strategis di kawasan Jakarta Pusat pada Rabu sore. Pertemuan tersebut difokuskan pada sinkronisasi kebijakan prioritas menjelang penutupan tahun anggaran 2026.",
+                    "Juru bicara pertemuan menyampaikan bahwa solidaritas antarpartai pendukung pemerintah menjadi kunci utama dalam menjaga iklim investasi dan stabilitas politik nasional di tengah dinamika ekonomi global.",
+                    "\"Kami memastikan seluruh fraksi di parlemen memiliki frekuensi yang sama dalam mengawal program kerakyatan, terutama yang berkaitan langsung dengan ketahanan pangan dan hilirisasi industri,\" ujarnya usai pertemuan berlangsung selama hampir tiga jam.",
+                    "Pengamat politik dari Universitas Indonesia menilai konsolidasi ini juga menjadi sinyal penting untuk meredam spekulasi mengenai perombakan kabinet maupun gesekan kepentingan menjelang penyusunan agenda legislasi tahun depan.",
+                    "Selain membahas isu ekonomi makro, para elite partai turut mengevaluasi efektivitas komunikasi publik pemerintah agar setiap kebijakan strategis dapat dipahami secara utuh oleh masyarakat di daerah."
+                ]
+            },
+            {
+                id: 2,
+                title: "Komisi II DPR RI Bahas Penyempurnaan Tata Kelola Pemilu dan Digitalisasi Rekapitulasi",
+                category: "DPR",
+                author: "Siti Rahmawati",
+                role: "Koresponden Parlemen",
+                publishedAt: "18 Nov 2026 • 14:40 WIB",
+                image: "https://images.unsplash.com/photo-1575320181282-9afab399332c?auto=format&fit=crop&w=1000&q=80",
+                featured: false,
+                summary: "Rapat Dengar Pendapat (RDP) di Senayan menyoroti pentingnya transparansi sistem informasi penghitungan suara untuk mencegah sengketa di masa mendatang.",
+                content: [
+                    "SENAYAN — Komisi II Dewan Perwakilan Rakyat (DPR) RI kembali menggelar Rapat Dengar Pendapat (RDP) bersama penyelenggara pemilu dan pakar teknologi informasi untuk mengevaluasi sistem rekapitulasi suara elektronik.",
+                    "Dalam rapat yang berlangsung dinamis di Kompleks Parlemen Senayan, sejumlah anggota dewan menekankan perlunya audit keamanan siber secara berkala serta standardisasi perangkat pemindai di tingkat tempat pemungutan suara (TPS).",
+                    "Ketua Komisi II DPR RI menegaskan bahwa reformasi tata kelola pemilu tidak boleh berhenti pada aspek teknis semata, tetapi juga harus memperkuat akuntabilitas penyelenggara di tingkat daerah.",
+                    "\"Kita ingin memastikan bahwa setiap suara rakyat tercatat secara presisi, transparan, dan dapat diaudit oleh publik secara real-time tanpa menimbulkan keraguan hukum,\" tegasnya di hadapan peserta rapat.",
+                    "Hasil dari rangkaian rapat ini nantinya akan dirumuskan menjadi rekomendasi resmi panitia kerja untuk dimasukkan ke dalam Program Legislasi Nasional (Prolegnas) prioritas."
+                ]
+            },
+            {
+                id: 3,
+                title: "Evaluasi Pelaksanaan Pilkada Serentak: Mahkamah Konstitusi Percepat Manajemen Perkara",
+                category: "Pilkada",
+                author: "Rizky Ramadhan",
+                role: "Jurnalis Politik & Daerah",
+                publishedAt: "18 Nov 2026 • 13:10 WIB",
+                image: "https://images.unsplash.com/photo-1540910419892-4a36d2c3266c?auto=format&fit=crop&w=1000&q=80",
+                featured: false,
+                summary: "Penerapan sistem pendaftaran gugatan berbasis digital dinilai berhasil memangkas waktu penyelesaian sengketa hasil pemilihan kepala daerah.",
+                content: [
+                    "JAKARTA — Penyelenggaraan pemilihan kepala daerah (Pilkada) di berbagai provinsi dan kabupaten/kota mendapatkan catatan evaluasi positif dari sisi penyelesaian sengketa hukum. Sistem peradilan elektronik terbukti mempercepat proses verifikasi berkas perkara.",
+                    "Dalam forum evaluasi nasional yang digelar bersama Kementerian Dalam Negeri, terungkap bahwa tingkat partisipasi pemilih di wilayah perkotaan maupun kepulauan menunjukkan tren peningkatan dibandingkan siklus sebelumnya.",
+                    "Meski demikian, catatan kritis tetap diarahkan pada praktik politik uang dan netralitas aparatur sipil negara (ASN) yang masih ditemukan di beberapa daerah dengan tingkat persaingan ketat.",
+                    "Pakar hukum tata negara menyarankan agar sanksi administratif maupun pidana terhadap pelanggaran netralitas birokrasi diterapkan lebih tegas guna menjaga kualitas demokrasi lokal.",
+                    "Kepala daerah terpilih diharapkan segera memprioritaskan sinkronisasi Rencana Pembangunan Jangka Menengah Daerah (RPJMD) dengan arah kebijakan pembangunan nasional."
+                ]
+            },
+            {
+                id: 4,
+                title: "KPK dan Kejaksaan Perkuat Sinergi Pengawasan Pengadaan Barang dan Jasa Strategis",
+                category: "Hukum & Korupsi",
+                author: "Anisa Putri",
+                role: "Desk Hukum & Investigasi",
+                publishedAt: "18 Nov 2026 • 11:25 WIB",
+                image: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=1000&q=80",
+                featured: false,
+                summary: "Integrasi sistem e-katalog dan pemantauan berbasis kecerdasan buatan mulai diterapkan untuk menutup celah mark-up anggaran proyek infrastruktur.",
+                content: [
+                    "JAKARTA — Komisi Pemberantasan Korupsi (KPK) bersama Kejaksaan Agung memperluas kerja sama pencegahan tindak pidana korupsi pada sektor pengadaan barang dan jasa pemerintah bernilai besar.",
+                    "Langkah ini diambil menyusul pemetaan titik rawan korupsi yang menunjukkan bahwa mayoritas perkara suap dan gratifikasi masih berakar pada rekayasa tender serta penggelembungan harga satuan proyek.",
+                    "Melalui integrasi data lintas lembaga, setiap anomali penawaran pada sistem pengadaan elektronik kini dapat terdeteksi lebih dini sebelum kontrak kerja ditandatangani oleh pejabat pembuat komitmen.",
+                    "\"Pencegahan yang berbasis teknologi jauh lebih efektif menyelamatkan keuangan negara. Namun apabila ditemukan unsur niat jahat dan persekongkolan, penindakan tegas tanpa pandang bulu tetap menjadi panglima,\" ujar pimpinan lembaga antirasuah tersebut.",
+                    "Selain pengawasan proyek fisik, kedua institusi juga menyoroti tata kelola dana hibah dan bantuan sosial agar tepat sasaran dan bebas dari kepentingan elektoral."
+                ]
+            },
+            {
+                id: 5,
+                title: "Otorita IKN Resmikan Kawasan Perkantoran Terpadu Tahap Lanjutan di Nusantara",
+                category: "IKN",
+                author: "Bima Sakti",
+                role: "Koresponden Kalimantan Timur",
+                publishedAt: "18 Nov 2026 • 09:50 WIB",
+                image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1000&q=80",
+                featured: false,
+                summary: "Pembangunan ekosistem kota cerdas berkonsep forest city di Ibu Kota Nusantara memasuki fase operasional bagi sejumlah kementerian dan lembaga negara.",
+                content: [
+                    "NUSANTARA — Pembangunan Ibu Kota Nusantara (IKN) di Kalimantan Timur mencatatkan tonggak baru dengan beroperasinya kompleks perkantoran terpadu tahap lanjutan di Kawasan Inti Pusat Pemerintahan (KIPP).",
+                    "Kepala Otorita IKN menjelaskan bahwa seluruh gedung pemerintahan yang baru diresmikan telah memenuhi standar bangunan hijau (green building) dengan pasokan energi terbarukan dari pembangkit listrik tenaga surya lokal.",
+                    "Pemindahan aparatur sipil negara (ASN) secara bertahap juga didukung oleh kesiapan hunian vertikal, fasilitas kesehatan bertaraf internasional, serta jaringan transportasi otonom ramah lingkungan.",
+                    "\"Nusantara bukan sekadar pemindahan pusat administrasi pemerintahan, melainkan transformasi budaya kerja birokrasi yang lebih kolaboratif, digital, dan berkelanjutan,\" paparnya saat meninjau pusat kendali kota cerdas.",
+                    "Minat investasi swasta domestik dan mancanegara pada sektor pendidikan, perhotelan, serta pusat riset teknologi di kawasan penyangga IKN juga dilaporkan terus mengalami pertumbuhan signifikan."
+                ]
+            },
+            {
+                id: 6,
+                title: "Badan Legislasi DPR Kebut Harmonisasi RUU Perlindungan Data dan Keamanan Siber",
+                category: "DPR",
+                author: "Siti Rahmawati",
+                role: "Koresponden Parlemen",
+                publishedAt: "17 Nov 2026 • 19:30 WIB",
+                image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1000&q=80",
+                featured: false,
+                summary: "DPR menargetkan regulasi keamanan siber nasional dapat memberikan payung hukum komprehensif bagi perlindungan infrastruktur vital negara.",
+                content: [
+                    "SENAYAN — Badan Legislasi (Baleg) DPR RI mempercepat proses harmonisasi Rancangan Undang-Undang (RUU) Keamanan dan Ketahanan Siber guna merespons meningkatnya ancaman serangan digital terhadap layanan publik.",
+                    "Dalam rapat panitia perancang undang-undang, fraksi-fraksi sepakat bahwa pembagian kewenangan antara badan siber nasional, kementerian teknis, dan aparat penegak hukum harus diatur secara tegas agar tidak terjadi tumpang tindih.",
+                    "Regulasi ini juga akan mewajibkan setiap penyelenggara sistem elektronik strategis untuk memiliki standar enkripsi mutakhir serta prosedur pelaporan insiden kebocoran data dalam waktu maksimal 24 jam.",
+                    "Pelaku industri digital dan akademisi turut dilibatkan dalam uji publik guna memastikan aturan baru tersebut tetap mendukung inovasi ekonomi digital nasional."
+                ]
+            },
+            {
+                id: 7,
+                title: "Konektivitas Tol Bawah Laut dan Bandara VVIP IKN Perkuat Aksesibilitas Kalimantan",
+                category: "IKN",
+                author: "Bima Sakti",
+                role: "Koresponden Kalimantan Timur",
+                publishedAt: "17 Nov 2026 • 15:20 WIB",
+                image: "https://images.unsplash.com/photo-1513828583688-c52646db42da?auto=format&fit=crop&w=1000&q=80",
+                featured: false,
+                summary: "Waktu tempuh dari Balikpapan menuju Kawasan Inti Pusat Pemerintahan IKN kini terpangkas drastis menjadi sekitar 35 menit.",
+                content: [
+                    "BALIKPAPAN — Infrastruktur konektivitas pendukung Ibu Kota Nusantara semakin terintegrasi seiring uji coba operasional jalan tol akses utama dan optimalisasi Bandara Nusantara.",
+                    "Kementerian Pekerjaan Umum menyatakan bahwa pembangunan terowongan bawah air (immersed tunnel) dirancang khusus untuk menjaga kelestarian ekosistem mangrove dan habitat satwa endemik di Teluk Balikpapan.",
+                    "Dengan terhubungnya jaringan jalan tol ini, distribusi logistik serta mobilitas masyarakat antarwilayah di Kalimantan Timur menjadi jauh lebih efisien.",
+                    "Pemerintah daerah sekitar seperti Penajam Paser Utara dan Kutai Kartanegara turut menyambut positif dampak berganda (multiplier effect) terhadap pertumbuhan UMKM dan sektor pariwisata lokal."
+                ]
+            },
+            {
+                id: 8,
+                title: "Pengesahan RUU Perampasan Aset Jadi Sorotan Utama Reformasi Hukum Nasional",
+                category: "Hukum & Korupsi",
+                author: "Anisa Putri",
+                role: "Desk Hukum & Investigasi",
+                publishedAt: "17 Nov 2026 • 10:05 WIB",
+                image: "https://images.unsplash.com/photo-1505664194779-8beaceb93744?auto=format&fit=crop&w=1000&q=80",
+                featured: false,
+                summary: "Kalangan akademisi dan koalisi masyarakat sipil mendesak percepatan pembahasan mekanisme pemulihan aset hasil kejahatan ekonomi.",
+                content: [
+                    "JAKARTA — Wacana percepatan penyelesaian regulasi perampasan aset tindak pidana kembali menguat dalam diskusi publik yang digelar oleh Pusat Studi Hukum dan Kebijakan.",
+                    "Para pakar hukum pidana menilai bahwa pendekatan penghukuman badan saja tidak lagi memadai untuk memberikan efek jera bagi pelaku kejahatan kerah putih tanpa disertai pemiskinan melalui penyitaan aset hasil kejahatan.",
+                    "Mekanisme pembuktian terbalik dan pengelolaan aset sitaan secara transparan menjadi poin krusial yang terus dibahas agar tetap menjunjung tinggi prinsip perlindungan hak asasi manusia serta kepastian hukum.",
+                    "Pemerintah bersama DPR diharapkan dapat menyepakati titik temu substansi pasal-pasal krusial dalam masa sidang berjalan."
+                ]
+            },
+            {
+                id: 9,
+                title: "Kemendagri Dorong Transparansi Anggaran Daerah Pasca Pelantikan Kepala Daerah",
+                category: "Pilkada",
+                author: "Rizky Ramadhan",
+                role: "Jurnalis Politik & Daerah",
+                publishedAt: "16 Nov 2026 • 17:45 WIB",
+                image: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=1000&q=80",
+                featured: false,
+                summary: "Seluruh pemerintah provinsi dan kabupaten/kota diwajibkan membuka akses publik terhadap postur APBD dan realisasi belanja prioritas.",
+                content: [
+                    "JAKARTA — Kementerian Dalam Negeri (Kemendagri) menerbitkan surat edaran penguatan tata kelola pemerintahan daerah bagi para kepala daerah hasil Pilkada serentak.",
+                    "Fokus utama instruksi tersebut adalah efisiensi belanja birokrasi serta peningkatan porsi anggaran untuk pelayanan dasar seperti pendidikan, kesehatan, dan pengendalian inflasi daerah.",
+                    "Melalui dashboard monitoring terpadu, masyarakat kini dapat memantau secara langsung realisasi janji kampanye kepala daerah yang telah diterjemahkan ke dalam dokumen perencanaan resmi.",
+                    "Langkah ini diharapkan mampu menekan potensi penyalahgunaan wewenang pada tahun pertama masa jabatan kepala daerah."
+                ]
+            }
+        ];
+
+        // Daftar Kategori Politik sesuai permintaan
+        const categories = [
+            "Semua",
+            "Politik Nasional",
+            "DPR",
+            "Pilkada",
+            "Hukum & Korupsi",
+            "IKN"
+        ];
+
+        // State Aplikasi
+        let state = {
+            selectedCategory: "Semua",
+            searchQuery: "",
+            activeArticleId: null,
+            fontSize: "base", // 'sm', 'base', 'lg'
+            bookmarks: JSON.parse(localStorage.getItem('np_bookmarks') || '[]')
+        };
+
+        /**
+         * Menghitung estimasi waktu baca berdasarkan jumlah kata
+         * Rata-rata kecepatan baca bahasa Indonesia: ~200 kata per menit
+         */
+        function calculateReadingTime(contentArray) {
+            const fullText = contentArray.join(" ");
+            const wordCount = fullText.trim().split(/\s+/).length;
+            const minutes = Math.max(1, Math.ceil(wordCount / 180));
+            return `${minutes} menit baca`;
+        }
+
+        /**
+         * Mendapatkan warna badge kategori agar mudah dibedakan secara visual
+         */
+        function getCategoryBadgeStyle(category) {
+            const styles = {
+                "Politik Nasional": "bg-red-100 text-red-700 dark:bg-red-950/80 dark:text-red-300 border-red-200 dark:border-red-800",
+                "DPR": "bg-blue-100 text-blue-700 dark:bg-blue-950/80 dark:text-blue-300 border-blue-200 dark:border-blue-800",
+                "Pilkada": "bg-amber-100 text-amber-800 dark:bg-amber-950/80 dark:text-amber-300 border-amber-200 dark:border-amber-800",
+                "Hukum & Korupsi": "bg-purple-100 text-purple-700 dark:bg-purple-950/80 dark:text-purple-300 border-purple-200 dark:border-purple-800",
+                "IKN": "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/80 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800"
+            };
+            return styles[category] || "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300";
+        }
+
+        /**
+         * Merender tab navigasi kategori
+         */
+        function renderCategoryTabs() {
+            const container = document.getElementById('category-tabs');
+            container.innerHTML = categories.map(cat => {
+                const isActive = state.selectedCategory === cat && state.activeArticleId === null;
+                const count = cat === "Semua" 
+                    ? newsDatabase.length 
+                    : newsDatabase.filter(item => item.category === cat).length;
+
+                return `
+                    <button 
+                        onclick="selectCategory('${cat}')"
+                        class="whitespace-nowrap px-4 py-2 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 ${
+                            isActive 
+                            ? 'bg-red-600 text-white shadow-sm' 
+                            : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                        }"
+                    >
+                        <span>${cat}</span>
+                        <span class="text-[11px] px-1.5 py-0.5 rounded-md ${
+                            isActive 
+                            ? 'bg-red-700 text-red-100' 
+                            : 'bg-slate-200/70 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+                        }">${count}</span>
+                    </button>
+                `;
+            }).join('');
+        }
+
+        /**
+         * Memilih kategori berita
+         */
+        function selectCategory(category) {
+            state.selectedCategory = category;
+            state.activeArticleId = null;
+            
+            // Pastikan tampilan kembali ke daftar berita
+            document.getElementById('article-reader-view').classList.add('hidden');
+            document.getElementById('news-list-view').classList.remove('hidden');
+            
+            renderCategoryTabs();
+            renderNewsList();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        /**
+         * Pencarian berita secara real-time
+         */
+        function handleSearch(query) {
+            state.searchQuery = query.trim().toLowerCase();
+            if (state.activeArticleId !== null) {
+                closeArticle();
+            }
+            renderNewsList();
+        }
+
+        /**
+         * Reset filter dan pencarian
+         */
+        function resetView() {
+            state.selectedCategory = "Semua";
+            state.searchQuery = "";
+            state.activeArticleId = null;
+            document.getElementById('search-input').value = "";
+            
+            document.getElementById('article-reader-view').classList.add('hidden');
+            document.getElementById('news-list-view').classList.remove('hidden');
+            
+            renderCategoryTabs();
+            renderNewsList();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        /**
+         * Merender Headline Utama dan Grid Daftar Berita
+         */
+        function renderNewsList() {
+            const featuredSection = document.getElementById('featured-section');
+            const newsGrid = document.getElementById('news-grid');
+            const emptyState = document.getElementById('empty-state');
+            const sectionTitle = document.getElementById('section-title');
+            const countBadge = document.getElementById('article-count-badge');
+
+            // Filter data berdasarkan kategori & kata kunci pencarian
+            let filteredNews = newsDatabase.filter(article => {
+                const matchCategory = state.selectedCategory === "Semua" || article.category === state.selectedCategory;
+                const matchSearch = state.searchQuery === "" || 
+                    article.title.toLowerCase().includes(state.searchQuery) ||
+                    article.summary.toLowerCase().includes(state.searchQuery) ||
+                    article.category.toLowerCase().includes(state.searchQuery);
+                return matchCategory && matchSearch;
+            });
+
+            // Update judul bagian
+            if (state.searchQuery !== "") {
+                sectionTitle.textContent = `Hasil Pencarian: "${state.searchQuery}"`;
+            } else if (state.selectedCategory === "Semua") {
+                sectionTitle.textContent = "Semua Berita Politik Terkini";
+            } else {
+                sectionTitle.textContent = `Kategori: ${state.selectedCategory}`;
+            }
+
+            countBadge.textContent = `${filteredNews.length} Berita`;
+
+            // Tampilkan Headline Utama hanya pada tab "Semua" tanpa pencarian
+            if (state.selectedCategory === "Semua" && state.searchQuery === "" && filteredNews.length > 0) {
+                const mainHeadline = filteredNews.find(n => n.featured) || filteredNews[0];
+                const readTime = calculateReadingTime(mainHeadline.content);
+                const isSaved = state.bookmarks.includes(mainHeadline.id);
+
+                featuredSection.classList.remove('hidden');
+                featuredSection.innerHTML = `
+                    <div class="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition group">
+                        <div class="grid grid-cols-1 lg:grid-cols-12">
+                            <div class="lg:col-span-7 relative overflow-hidden bg-slate-200 dark:bg-slate-800 min-h-[260px] sm:min-h-[360px] cursor-pointer" onclick="openArticle(${mainHeadline.id})">
+                                <img 
+                                    src="${mainHeadline.image}" 
+                                    alt="${mainHeadline.title}" 
+                                    onerror="this.src='https://placehold.co/800x500/1e293b/ffffff?text=Berita+Politik+Nasional'"
+                                    class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                                >
+                                <div class="absolute top-4 left-4 flex items-center gap-2">
+                                    <span class="px-3 py-1 bg-red-600 text-white text-xs font-bold uppercase tracking-wider rounded-lg shadow">
+                                        Berita Utama
+                                    </span>
+                                    <span class="px-3 py-1 text-xs font-semibold rounded-lg border backdrop-blur-md ${getCategoryBadgeStyle(mainHeadline.category)}">
+                                        ${mainHeadline.category}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="lg:col-span-5 p-6 sm:p-8 flex flex-col justify-between">
+                                <div>
+                                    <div class="flex items-center flex-wrap gap-3 text-xs text-slate-500 dark:text-slate-400 mb-3">
+                                        <span class="flex items-center gap-1">
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                            ${mainHeadline.publishedAt}
+                                        </span>
+                                        <span>•</span>
+                                        <span class="inline-flex items-center gap-1 font-semibold text-red-600 dark:text-red-400">
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                                            ${readTime}
+                                        </span>
+                                    </div>
+                                    <h2 onclick="openArticle(${mainHeadline.id})" class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white leading-tight hover:text-red-600 dark:hover:text-red-400 cursor-pointer transition mb-4">
+                                        ${mainHeadline.title}
+                                    </h2>
+                                    <p class="text-slate-600 dark:text-slate-300 text-sm sm:text-base leading-relaxed mb-6">
+                                        ${mainHeadline.summary}
+                                    </p>
+                                </div>
+
+                                <div class="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-4">
+                                    <div class="text-xs">
+                                        <p class="font-bold text-slate-800 dark:text-slate-200">${mainHeadline.author}</p>
+                                        <p class="text-slate-500">${mainHeadline.role}</p>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <button onclick="toggleBookmark(${mainHeadline.id}, event)" class="p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition ${isSaved ? 'text-red-600 border-red-200 bg-red-50 dark:bg-red-950/40' : 'text-slate-500'}" title="Simpan Berita">
+                                            <svg class="w-4 h-4" fill="${isSaved ? 'currentColor' : 'none'}" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path></svg>
+                                        </button>
+                                        <button onclick="openArticle(${mainHeadline.id})" class="px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold rounded-xl transition shadow-sm">
+                                            Baca Selengkapnya
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                featuredSection.classList.add('hidden');
+            }
+
+            // Render Daftar Kartu Berita
+            if (filteredNews.length === 0) {
+                newsGrid.innerHTML = "";
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            newsGrid.innerHTML = filteredNews.map(article => {
+                const readTime = calculateReadingTime(article.content);
+                const isSaved = state.bookmarks.includes(article.id);
+
+                return `
+                    <article class="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition flex flex-col justify-between group">
+                        <div>
+                            <!-- Thumbnail -->
+                            <div class="relative h-48 overflow-hidden bg-slate-200 dark:bg-slate-800 cursor-pointer" onclick="openArticle(${article.id})">
+                                <img 
+                                    src="${article.image}" 
+                                    alt="${article.title}" 
+                                    onerror="this.src='https://placehold.co/600x400/1e293b/ffffff?text=${encodeURIComponent(article.category)}'"
+                                    class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                                >
+                                <span class="absolute top-3 left-3 px-2.5 py-1 text-xs font-semibold rounded-lg border backdrop-blur-md ${getCategoryBadgeStyle(article.category)}">
+                                    ${article.category}
+                                </span>
+                            </div>
+
+                            <!-- Metadata Waktu & Estimasi Baca -->
+                            <div class="p-5 pb-3">
+                                <div class="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mb-2.5">
+                                    <span>${article.publishedAt}</span>
+                                    <span class="inline-flex items-center gap-1 font-medium text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/50 px-2 py-0.5 rounded-md">
+                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                        ${readTime}
+                                    </span>
+                                </div>
+
+                                <h3 onclick="openArticle(${article.id})" class="text-lg font-bold text-slate-900 dark:text-white leading-snug hover:text-red-600 dark:hover:text-red-400 cursor-pointer transition mb-2.5 line-clamp-2">
+                                    ${article.title}
+                                </h3>
+
+                                <p class="text-sm text-slate-600 dark:text-slate-400 line-clamp-3 leading-relaxed">
+                                    ${article.summary}
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Footer Kartu -->
+                        <div class="px-5 py-3.5 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-slate-900/50">
+                            <span class="text-xs font-medium text-slate-600 dark:text-slate-400 truncate max-w-[130px]">
+                                Oleh ${article.author}
+                            </span>
+                            <div class="flex items-center gap-2">
+                                <button onclick="toggleBookmark(${article.id}, event)" class="p-2 rounded-lg hover:bg-slate-200/70 dark:hover:bg-slate-800 transition ${isSaved ? 'text-red-600' : 'text-slate-400'}" title="Simpan untuk dibaca nanti">
+                                    <svg class="w-4 h-4" fill="${isSaved ? 'currentColor' : 'none'}" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path></svg>
+                                </button>
+                                <button onclick="openArticle(${article.id})" class="inline-flex items-center gap-1 text-xs font-bold text-red-600 dark:text-red-400 hover:underline">
+                                    Baca Berita
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                </button>
+                            </div>
+                        </div>
+                    </article>
+                `;
+            }).join('');
+        }
+
+        /**
+         * Membuka artikel dalam Mode Baca Langsung di Website
+         */
+        function openArticle(articleId) {
+            const article = newsDatabase.find(item => item.id === articleId);
+            if (!article) return;
+
+            state.activeArticleId = articleId;
+            renderCategoryTabs();
+
+            // Sembunyikan list berita, tampilkan reader
+            document.getElementById('news-list-view').classList.add('hidden');
+            document.getElementById('article-reader-view').classList.remove('hidden');
+
+            const readTime = calculateReadingTime(article.content);
+            const isSaved = state.bookmarks.includes(article.id);
+            const fontSizeClass = getReaderFontSizeClass();
+
+            const readerContent = document.getElementById('reader-content');
+            readerContent.innerHTML = `
+                <!-- Kategori & Waktu -->
+                <div class="flex flex-wrap items-center gap-3 mb-4">
+                    <span class="px-3 py-1 text-xs font-bold rounded-lg border ${getCategoryBadgeStyle(article.category)}">
+                        ${article.category}
+                    </span>
+                    <span class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+                        ${article.publishedAt}
+                    </span>
+                    <span class="text-slate-300 dark:text-slate-700">•</span>
+                    <span class="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-red-600 dark:text-red-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Estimasi waktu baca: ${readTime}
+                    </span>
+                </div>
+
+                <!-- Judul Utama -->
+                <h1 class="text-2xl sm:text-4xl font-extrabold text-slate-900 dark:text-white leading-tight mb-4">
+                    ${article.title}
+                </h1>
+
+                <!-- Ringkasan / Lead -->
+                <p class="text-base sm:text-lg text-slate-600 dark:text-slate-300 font-medium leading-relaxed mb-6 pb-6 border-b border-slate-100 dark:border-slate-800">
+                    ${article.summary}
+                </p>
+
+                <!-- Info Penulis & Tombol Aksi -->
+                <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center font-bold text-slate-700 dark:text-slate-200">
+                            ${article.author.charAt(0)}
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-slate-900 dark:text-white">${article.author}</p>
+                            <p class="text-xs text-slate-500">${article.role} • NusantaraPolitik</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <button onclick="toggleBookmark(${article.id}, event); openArticle(${article.id})" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border text-xs font-semibold transition ${
+                            isSaved 
+                            ? 'bg-red-50 dark:bg-red-950/50 border-red-200 dark:border-red-800 text-red-600 dark:text-red-400' 
+                            : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
+                        }">
+                            <svg class="w-4 h-4" fill="${isSaved ? 'currentColor' : 'none'}" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path></svg>
+                            <span>${isSaved ? 'Tersimpan' : 'Simpan Berita'}</span>
+                        </button>
+                        <button onclick="copyArticleSummary('${article.title.replace(/'/g, "\\'")}')" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
+                            <span>Bagikan</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Gambar Utama Berita -->
+                <figure class="mb-8">
+                    <img 
+                        src="${article.image}" 
+                        alt="${article.title}" 
+                        onerror="this.src='https://placehold.co/900x500/1e293b/ffffff?text=${encodeURIComponent(article.category)}'"
+                        class="w-full max-h-[460px] object-cover rounded-2xl shadow-sm"
+                    >
+                    <figcaption class="text-xs text-slate-500 mt-2.5 italic">
+                        Ilustrasi liputan ${article.category} — Dokumentasi Redaksi NusantaraPolitik.
+                    </figcaption>
+                </figure>
+
+                <!-- Isi Paragraf Artikel (Menggunakan Font Serif agar nyaman dibaca panjang) -->
+                <div id="article-body-text" class="font-serif text-slate-800 dark:text-slate-200 space-y-5 leading-loose ${fontSizeClass}">
+                    ${article.content.map(paragraph => `<p>${paragraph}</p>`).join('')}
+                </div>
+
+                <!-- Tag / Topik Terkait -->
+                <div class="mt-10 pt-6 border-t border-slate-200 dark:border-slate-800 flex flex-wrap items-center gap-2">
+                    <span class="text-xs font-bold text-slate-500 uppercase mr-1">Topik:</span>
+                    <button onclick="selectCategory('${article.category}')" class="px-3 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-red-100 dark:hover:bg-red-950 text-slate-700 dark:text-slate-300 text-xs font-medium rounded-lg transition">
+                        #${article.category.replace(/\s+/g, '')}
+                    </button>
+                    <span class="px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-medium rounded-lg">
+                        #BeritaNasional
+                    </span>
+                    <span class="px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-medium rounded-lg">
+                        #Indonesia2026
+                    </span>
+                </div>
+            `;
+
+            // Render Berita Terkait
+            renderRelatedArticles(article);
+
+            // Scroll ke atas secara halus
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            updateReadingProgress();
+        }
+
+        /**
+         * Menutup mode baca artikel dan kembali ke daftar berita
+         */
+        function closeArticle() {
+            state.activeArticleId = null;
+            document.getElementById('article-reader-view').classList.add('hidden');
+            document.getElementById('news-list-view').classList.remove('hidden');
+            renderCategoryTabs();
+            renderNewsList();
+        }
+
+        /**
+         * Merender berita terkait di bawah artikel yang sedang dibaca
+         */
+        function renderRelatedArticles(currentArticle) {
+            const relatedContainer = document.getElementById('related-articles');
+            // Prioritaskan kategori sama, lalu ambil berita lain jika kurang
+            let related = newsDatabase.filter(a => a.id !== currentArticle.id && a.category === currentArticle.category);
+            if (related.length < 2) {
+                const others = newsDatabase.filter(a => a.id !== currentArticle.id && a.category !== currentArticle.category);
+                related = [...related, ...others].slice(0, 2);
+            } else {
+                related = related.slice(0, 2);
+            }
+
+            relatedContainer.innerHTML = related.map(item => `
+                <div onclick="openArticle(${item.id})" class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-red-400 cursor-pointer transition flex gap-4 items-center">
+                    <img 
+                        src="${item.image}" 
+                        alt="${item.title}" 
+                        onerror="this.src='https://placehold.co/200x200/1e293b/ffffff?text=Berita'"
+                        class="w-20 h-20 rounded-lg object-cover flex-shrink-0"
+                    >
+                    <div>
+                        <span class="text-[11px] font-bold text-red-600 dark:text-red-400">${item.category}</span>
+                        <h4 class="text-sm font-bold text-slate-900 dark:text-white line-clamp-2 mt-0.5 hover:text-red-600 transition">
+                            ${item.title}
+                        </h4>
+                        <p class="text-[11px] text-slate-500 mt-1">${calculateReadingTime(item.content)}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        /**
+         * Mengubah ukuran huruf pada mode baca artikel
+         */
+        function changeFontSize(size) {
+            state.fontSize = size;
+            const bodyText = document.getElementById('article-body-text');
+            if (bodyText) {
+                bodyText.classList.remove('text-sm', 'text-base', 'sm:text-lg', 'text-lg', 'sm:text-xl');
+                const classes = getReaderFontSizeClass().split(' ');
+                bodyText.classList.add(...classes);
+            }
+
+            // Update tampilan tombol aktif
+            ['sm', 'base', 'lg'].forEach(btnSize => {
+                const btn = document.getElementById(`font-btn-${btnSize}`);
+                if (btn) {
+                    if (btnSize === size) {
+                        btn.classList.add('bg-red-600', 'text-white');
+                        btn.classList.remove('hover:bg-slate-100', 'dark:hover:bg-slate-800');
+                    } else {
+                        btn.classList.remove('bg-red-600', 'text-white');
+                        btn.classList.add('hover:bg-slate-100', 'dark:hover:bg-slate-800');
+                    }
+                }
+            });
+        }
+
+        function getReaderFontSizeClass() {
+            if (state.fontSize === 'sm') return 'text-sm sm:text-base';
+            if (state.fontSize === 'lg') return 'text-lg sm:text-xl';
+            return 'text-base sm:text-lg';
+        }
+
+        /**
+         * Fitur Simpan Berita (Bookmark)
+         */
+        function toggleBookmark(articleId, event) {
+            if (event) event.stopPropagation();
+            const index = state.bookmarks.indexOf(articleId);
+            if (index === -1) {
+                state.bookmarks.push(articleId);
+                showToast("Berita ditambahkan ke daftar tersimpan");
+            } else {
+                state.bookmarks.splice(index, 1);
+                showToast("Berita dihapus dari daftar tersimpan");
+            }
+            localStorage.setItem('np_bookmarks', JSON.stringify(state.bookmarks));
+            updateBookmarkCount();
+            renderNewsList();
+            renderBookmarkList();
+        }
+
+        function updateBookmarkCount() {
+            document.getElementById('bookmark-count').textContent = state.bookmarks.length;
+        }
+
+        function toggleBookmarkModal() {
+            const modal = document.getElementById('bookmark-modal');
+            modal.classList.toggle('hidden');
+            if (!modal.classList.contains('hidden')) {
+                renderBookmarkList();
+            }
+        }
+
+        function renderBookmarkList() {
+            const listContainer = document.getElementById('bookmark-list');
+            const savedArticles = newsDatabase.filter(n => state.bookmarks.includes(n.id));
+
+            if (savedArticles.length === 0) {
+                listContainer.innerHTML = `
+                    <p class="text-sm text-slate-500 text-center py-8">
+                        Belum ada berita yang disimpan. Klik ikon penanda pada berita untuk menyimpannya di sini.
+                    </p>
+                `;
+                return;
+            }
+
+            listContainer.innerHTML = savedArticles.map(item => `
+                <div class="flex items-start justify-between gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+                    <div class="cursor-pointer" onclick="toggleBookmarkModal(); openArticle(${item.id})">
+                        <span class="text-[11px] font-bold text-red-600 dark:text-red-400">${item.category}</span>
+                        <h4 class="text-sm font-bold text-slate-900 dark:text-white hover:text-red-600 transition">${item.title}</h4>
+                        <p class="text-xs text-slate-500 mt-1">${item.publishedAt} • ${calculateReadingTime(item.content)}</p>
+                    </div>
+                    <button onclick="toggleBookmark(${item.id}, event)" class="text-slate-400 hover:text-red-600 p-1" title="Hapus">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        /**
+         * Salin Judul & Info Berita (Menggunakan execCommand sesuai standar kompatibilitas iframe)
+         */
+        function copyArticleSummary(title) {
+            const textToCopy = `Baca berita di NusantaraPolitik: "${title}"`;
+            const tempInput = document.createElement('textarea');
+            tempInput.value = textToCopy;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            try {
+                document.execCommand('copy');
+                showToast("Tautan & judul berita berhasil disalin!");
+            } catch (err) {
+                showToast("Gagal menyalin teks");
+            }
+            document.body.removeChild(tempInput);
+        }
+
+        /**
+         * Notifikasi Toast
+         */
+        function showToast(message) {
+            const toast = document.getElementById('toast-notification');
+            document.getElementById('toast-message').textContent = message;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 2800);
+        }
+
+        /**
+         * Mode Gelap / Terang (Dark Mode)
+         */
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const isDark = html.classList.toggle('dark');
+            localStorage.setItem('np_theme', isDark ? 'dark' : 'light');
+            updateThemeUI(isDark);
+        }
+
+        function updateThemeUI(isDark) {
+            document.getElementById('theme-text').textContent = isDark ? 'Mode Terang' : 'Mode Gelap';
+            document.getElementById('theme-icon-dark').classList.toggle('hidden', isDark);
+            document.getElementById('theme-icon-light').classList.toggle('hidden', !isDark);
+        }
+
+        /**
+         * Progress Bar saat membaca artikel
+         */
+        function updateReadingProgress() {
+            if (state.activeArticleId === null) return;
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+            const bar = document.getElementById('reading-progress-bar');
+            if (bar) bar.style.width = scrolled + "%";
+        }
+
+        window.addEventListener('scroll', updateReadingProgress);
+
+        /**
+         * Inisialisasi Halaman Saat Dimuat
+         */
+        window.addEventListener('DOMContentLoaded', () => {
+            // Cek preferensi tema tersimpan
+            const savedTheme = localStorage.getItem('np_theme');
+            if (savedTheme === 'dark') {
+                document.documentElement.classList.add('dark');
+                updateThemeUI(true);
+            }
+
+            // Set tanggal hari ini secara otomatis
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('current-date').textContent = new Date().toLocaleDateString('id-ID', options);
+
+            updateBookmarkCount();
+            renderCategoryTabs();
+            renderNewsList();
+        });
+    </script>
+</body>
+              </html>
